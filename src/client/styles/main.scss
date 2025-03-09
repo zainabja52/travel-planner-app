@@ -1,0 +1,541 @@
+// Enhanced Fancy Styles
+// Color Variables
+$primary-color: #007EA7;          // A vibrant deep sky blue evoking clear skies and the ocean.
+$secondary-color: #00A8E8;        // A lighter blue to add brightness and complement the primary tone.
+$accent-color: #FF6F61;           // A bold coral for energetic call-to-action highlights.
+$background-gradient: linear-gradient(135deg, #74ebd5, #ACB6E5);  // A smooth gradient reminiscent of a serene horizon.
+$text-color: #2A3F54;
+$glass-effect: rgba(255, 255, 255, 0.25);
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+// Base Styles with Parallax Effect
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: $background-gradient;
+  color: $text-color;
+  perspective: 1000px;
+  overflow-x: hidden;
+}
+
+// Floating Animation
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+// Neon Pulse Effect
+@keyframes neonPulse {
+  0% { filter: drop-shadow(0 0 2px $accent-color); }
+  50% { filter: drop-shadow(0 0 10px $accent-color); }
+  100% { filter: drop-shadow(0 0 2px $accent-color); }
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  transform-style: preserve-3d;
+}
+
+// Enhanced Hero Section
+.hero {
+  text-align: center;
+  padding: 8rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, rgba(#667eea, 0.9), rgba(#764ba2, 0.9));
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0D0iMTAwJSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdH9va2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+') repeat;
+    opacity: 0.1;
+    z-index: 0;
+  }
+
+  h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-weight: 700;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: $accent-color;
+    }
+  }
+
+  p {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+// Holographic Form
+#travelForm {
+  display: flex;
+  gap: 1.5rem;
+  max-width: 1300px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1),
+              0 0 40px rgba($accent-color, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+      transparent 25%,
+      rgba($accent-color, 0.1) 25%,
+      rgba($accent-color, 0.1) 50%,
+      transparent 50%,
+      transparent 75%,
+      rgba($secondary-color, 0.1) 75%
+    );
+    background-size: 4px 4px;
+    animation: hologram 20s linear infinite;
+    opacity: 0.3;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .form-group {
+    flex: 1;
+    position: relative;
+    
+    label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: rgba($primary-color, 0.6);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    input {
+      padding: 1.5rem 1rem 0.5rem;
+      border: none;
+      border-bottom: 2px solid rgba($primary-color, 0.1);
+      border-radius: 0;
+      background: transparent;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        outline: none;
+        border-bottom-color: $accent-color;
+        box-shadow: 0 4px 6px -1px rgba($accent-color, 0.1);
+        
+        + label {
+          transform: translateY(-1rem) scale(0.8);
+          color: $accent-color;
+        }
+      }
+      
+      &:not(:placeholder-shown) + label {
+        transform: translateY(-1rem) scale(0.8);
+      }
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.2rem 2.8rem;
+    background: linear-gradient(45deg, $secondary-color, darken($secondary-color, 10%));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.3),
+        transparent
+      );
+      transition: 0.5s;
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($secondary-color, 0.3);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+
+    svg {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateY(-3px);
+    }
+  }
+}
+
+// Hologram Animation
+@keyframes hologram {
+  0% { transform: rotate(0deg) translateZ(0); }
+  100% { transform: rotate(360deg) translateZ(0); }
+}
+
+// Enhanced Travel Card
+.travel-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 1300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1),
+              0 0 40px rgba($accent-color, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      transparent 25%,
+      rgba($accent-color, 0.05) 25%,
+      rgba($accent-color, 0.05) 50%,
+      transparent 50%,
+      transparent 75%,
+      rgba($secondary-color, 0.05) 75%
+    );
+    background-size: 4px 4px;
+    animation: hologram 20s linear infinite;
+    opacity: 0.2;
+  }
+
+  .travel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+
+    h2 {
+      color: $primary-color;
+      font-size: 2.5rem;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 0.5rem;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: $accent-color;
+      }
+    }
+
+    .countdown {
+      background: linear-gradient(45deg, $secondary-color, darken($secondary-color, 10%));
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba($secondary-color, 0.3);
+      animation: neonPulse 2s infinite;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin: 1.5rem 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  .weather-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+
+    div {
+      background: $glass-effect;
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      transition: transform 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      }
+
+      p:first-child {
+        color: $secondary-color;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      p:last-child {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $primary-color;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Saved Trips Section
+.saved-trips {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba($accent-color, 0.1);
+
+  h3 {
+    color: $primary-color;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 80%;
+      width: 4px;
+      background: $secondary-color;
+      border-radius: 2px;
+    }
+  }
+}
+
+// Trip Cards
+.trip-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+
+  h4 {
+    color: $primary-color;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    span {
+      color: lighten($primary-color, 30%);
+      font-size: 0.9rem;
+      display: block;
+      margin-top: 0.3rem;
+    }
+  }
+
+  .trip-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .days-left {
+      background: rgba($accent-color, 0.1);
+      color: $accent-color;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+
+  .remove-btn {
+    background: rgba($secondary-color, 0.1);
+    border: none;
+    color: $secondary-color;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &::before {
+      content: '×';
+      font-size: 1.6rem;
+      line-height: 1;
+      position: relative;
+      top: -1px;
+    }
+
+    &:hover {
+      background: $secondary-color;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    &:active {
+      transform: scale(0.9) rotate(90deg);
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: lighten($primary-color, 30%);
+  
+  .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+}
+
+// Enhanced Error Messages
+.error {
+  color: #ff4757;
+  background: rgba(255,71,87,0.1);
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #ff4757;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  backdrop-filter: blur(5px);
+  animation: shake 0.5s ease-in-out;
+  
+  &::before {
+    content: '⚠️';
+    font-size: 1.5rem;
+    filter: drop-shadow(0 2px 4px rgba(255,71,87,0.2));
+  }
+}
+
+// Shake Animation
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero {
+    padding: 6rem 0 3rem;
+    
+    h1 {
+      font-size: 2.5rem;
+    }
+    
+    p {
+      font-size: 1.1rem;
+    }
+  }
+
+  #travelForm {
+    flex-direction: column;
+    padding: 1.5rem;
+    
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .travel-card {
+    padding: 1.5rem;
+    
+    .travel-header h2 {
+      font-size: 1.8rem;
+    }
+    
+    img {
+      height: 250px;
+    }
+  }
+}
