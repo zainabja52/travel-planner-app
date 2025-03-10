@@ -5,6 +5,11 @@ A web app that helps users plan trips by integrating location data, weather fore
 
 ## 🎥 Demo
 
+
+https://github.com/user-attachments/assets/5d641932-8aeb-4288-9a7c-911d516cc2e9
+
+
+
 ## ✨ Features
 - **📅 Trip Planning**: Enter destination and date for weather forecasts
 - **📸 Image Integration**: Displays destination images from Pixabay
