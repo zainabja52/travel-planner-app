@@ -30,8 +30,8 @@ https://github.com/user-attachments/assets/5d641932-8aeb-4288-9a7c-911d516cc2e9
 
 ## 🚀 Installation
 ```bash
-git clone https://github.com/your-username/travel-planner.git
-cd travel-planner
+git clone https://github.com/zainabja52/travel-planner-app.git
+cd travel-planner-app
 npm install
 ```
 
