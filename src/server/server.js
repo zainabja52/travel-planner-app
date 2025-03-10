@@ -1,21 +1,17 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch').default;
+const path = require('path');
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(join(__dirname, '../../dist')));
+app.use(express.static(path.join(__dirname, '../../dist')));
+app.use('/assets', express.static(path.join(__dirname, '../../public/assets')));
 
-// API Routes
+// Geonames API
 app.post('/api/geonames', async (req, res) => {
   try {
     const { location } = req.body;
@@ -24,7 +20,7 @@ app.post('/api/geonames', async (req, res) => {
     const response = await fetch(
       `http://api.geonames.org/searchJSON?q=${encodeURIComponent(location)}&maxRows=1&username=${process.env.GEONAMES_USER}`
     );
-    
+
     const data = await response.json();
     if (!data.geonames?.length) return res.status(404).json({ error: 'Location not found' });
 
@@ -40,6 +36,7 @@ app.post('/api/geonames', async (req, res) => {
   }
 });
 
+// Weatherbit API
 app.post('/api/weatherbit', async (req, res) => {
   try {
     const { lat, lon, days } = req.body;
@@ -51,7 +48,7 @@ app.post('/api/weatherbit', async (req, res) => {
     );
 
     if (!response.ok) throw new Error('Weather API failed');
-    
+
     const data = await response.json();
     if (!data.data?.length) return res.status(404).json({ error: 'Weather data not found' });
 
@@ -71,6 +68,7 @@ app.post('/api/weatherbit', async (req, res) => {
   }
 });
 
+// Pixabay API
 app.post('/api/pixabay', async (req, res) => {
   try {
     const { query } = req.body;
@@ -79,15 +77,18 @@ app.post('/api/pixabay', async (req, res) => {
     const response = await fetch(
       `https://pixabay.com/api/?key=${process.env.PIXABAY_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=3`
     );
-    
+
     const data = await response.json();
-    res.json(data.hits[0]?.webformatURL || './assets/default.jpg');
+    res.json(data.hits[0]?.webformatURL || '/assets/default.jpg');
   } catch (error) {
     console.error('Pixabay Error:', error);
     res.status(500).json({ error: 'Failed to fetch image' });
   }
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = { app };

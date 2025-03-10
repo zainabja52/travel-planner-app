@@ -2,18 +2,33 @@ import '../styles/main.scss';
 
 // DOM Elements with null checks
 const getElement = (id) => document.getElementById(id) || console.error(`Element ${id} not found`);
-const elements = {
-  travelForm: getElement('travelForm'),
-  resultsDiv: getElement('results'),
-  errorDiv: getElement('error'),
-  destination: getElement('destination'),
-  countdown: getElement('countdown'),
-  destinationImage: getElement('destinationImage'),
-  temperature: getElement('temperature'),
-  conditions: getElement('conditions'),
-  feelsLike: getElement('feelsLike'),
-  savedTrips: getElement('savedTrips')
+let elements = {};
+
+const initializeElements = () => {
+  elements = {
+    travelForm: document.getElementById('travelForm'),
+    resultsDiv: document.getElementById('results'),
+    errorDiv: document.getElementById('error'),
+    destination: document.getElementById('destination'),
+    countdown: document.getElementById('countdown'),
+    destinationImage: document.getElementById('destinationImage'),
+    temperature: document.getElementById('temperature'),
+    conditions: document.getElementById('conditions'),
+    feelsLike: document.getElementById('feelsLike'),
+    savedTrips: document.getElementById('savedTrips')
+  };
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  initializeElements();
+  if (elements.travelForm) {
+    elements.travelForm.addEventListener('submit', handleFormSubmit);
+  }
+  if (elements.savedTrips) {
+    elements.savedTrips.addEventListener('click', handleRemoveTrip);
+  }
+  loadSavedTrips();
+});
 
 // API Utilities
 const api = {
@@ -50,7 +65,6 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
-// Trip Calculations
 const calculateTripDetails = (departure) => {
   const today = new Date();
   const tripDate = new Date(departure);
@@ -64,34 +78,57 @@ const calculateTripDetails = (departure) => {
   };
 };
 
-// Local Storage
+// Save trip to localStorage
 const saveTrip = (tripData) => {
-  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  trips.push(tripData);
-  localStorage.setItem('trips', JSON.stringify(trips));
-};
-
-const loadSavedTrips = () => {
-  const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-  if (elements.savedTrips) {
-    elements.savedTrips.innerHTML = trips.map((trip, index) => `
-      <div class="trip-card" data-index="${index}">
-        <h4>${trip.city}, ${trip.country}</h4>
-        <p>${trip.daysLeft} Days Left</p>
-        <button class="remove-btn">Remove</button>
-      </div>
-    `).join('');
+  try {
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    trips.push(tripData);
+    localStorage.setItem('trips', JSON.stringify(trips));
+  } catch (error) {
+    console.error('Failed to save trip:', error);
   }
 };
 
-// UI Updates
+// Load and render saved trips
+const loadSavedTrips = () => {
+  try {
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    const container = elements.savedTrips;
+
+    if (!container) return;
+
+    container.innerHTML = trips.length ? 
+      trips.map((trip, index) => `
+        <div class="trip-card" data-index="${index}">
+          <div class="trip-info">
+            <h3>${trip.city || 'Unknown'}, ${trip.country || 'Unknown'}</h3>
+            <p class="date">Date: ${trip.departureDate}</p>
+            <p class="countdown">${trip.daysLeft >= 0 
+              ? `${trip.daysLeft} days left` 
+              : 'Trip completed'}</p>
+            <button class="remove-btn">Remove</button>
+          </div>
+        </div>
+      `).join('') : 
+      `<div class="empty-state">
+        <p class="empty-message">No saved trips yet. Start planning!</p>
+      </div>`;
+  } catch (error) {
+    console.error('Failed to load trips:', error);
+    if (elements.errorDiv) {
+      elements.errorDiv.textContent = 'Error loading saved trips';
+    }
+  }
+};
+
+// UI Update Helpers
 const safeUpdate = (element, content) => element && (element.textContent = content);
 const safeSrcUpdate = (element, src) => element && (element.src = src);
 
-const updateUI = ({ city, country, weather, image, daysLeft }) => {
+const updateUI = ({ city, country, weather, image, daysLeft, departureDate }) => {
   safeUpdate(elements.destination, `${city}, ${country}`);
   safeUpdate(elements.countdown, daysLeft >= 0 ? `${daysLeft} Days Left` : 'Trip Date Passed!');
-  safeSrcUpdate(elements.destinationImage, image || './assets/default.jpg');
+  safeSrcUpdate(elements.destinationImage, image || '/assets/default.jpg');
   
   safeUpdate(elements.temperature, `${weather.temp}°C`);
   safeUpdate(elements.conditions, weather.description);
@@ -101,7 +138,17 @@ const updateUI = ({ city, country, weather, image, daysLeft }) => {
     elements.resultsDiv.classList.remove('hidden');
   }
 
-  saveTrip({ city, country, daysLeft, image });
+  saveTrip({ 
+    city, 
+    country, 
+    daysLeft, 
+    departureDate,
+    weather: {
+      temp: weather.temp,
+      description: weather.description,
+      feels_like: weather.feels_like
+    }
+  });
   loadSavedTrips();
 };
 
@@ -109,13 +156,17 @@ const updateUI = ({ city, country, weather, image, daysLeft }) => {
 const handleRemoveTrip = (e) => {
   if (e.target.classList.contains('remove-btn')) {
     const tripCard = e.target.closest('.trip-card');
-    const index = parseInt(tripCard.dataset.index);
+    const index = parseInt(tripCard?.dataset.index);
     
     if (!isNaN(index)) {
-      const trips = JSON.parse(localStorage.getItem('trips') || '[]');
-      trips.splice(index, 1);
-      localStorage.setItem('trips', JSON.stringify(trips));
-      loadSavedTrips();
+      try {
+        const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+        trips.splice(index, 1);
+        localStorage.setItem('trips', JSON.stringify(trips));
+        loadSavedTrips();
+      } catch (error) {
+        console.error('Failed to remove trip:', error);
+      }
     }
   }
 };
@@ -138,37 +189,48 @@ const handleFormSubmit = async (e) => {
     return;
   }
 
+  // Check for duplicate dates
+  const existingTrips = JSON.parse(localStorage.getItem('trips') || '[]');
+  const isDuplicate = existingTrips.some(trip => trip.departureDate === departure);
+  
+  if (isDuplicate) {
+    safeUpdate(elements.errorDiv, 'A trip already exists for this date.');
+    return;
+  }
+
   try {
     const geo = await api.geonames(location);
     const weather = await api.weatherbit(geo.lat, geo.lng, daysLeft);
-    const image = await api.pixabay(location);
     
+    // Fetch image with fallback
+    let image;
+    try {
+      image = await api.pixabay(location);
+    } catch (pixErr) {
+      console.error('Pixabay error:', pixErr);
+      image = '/assets/default.jpg';
+    }
+
     updateUI({
       city: geo.name,
       country: geo.country,
       weather,
       image,
-      daysLeft
+      daysLeft,
+      departureDate: departure
     });
   } catch (err) {
-    console.error(err);
-    safeUpdate(elements.errorDiv, isPast ? 
-      'Cannot plan past trips' : 
-      'Failed to fetch data. Try again.'
-    );
+    if (!navigator.onLine) {
+      safeUpdate(elements.errorDiv, 'Offline: Check your internet connection.');
+    } else {
+      console.error(err);
+      safeUpdate(elements.errorDiv, isPast ? 
+        'Cannot plan past trips' : 
+        'Failed to fetch data. Check your API keys and try again.'
+      );
+    }
   }
 };
-
-// Initialization
-document.addEventListener('DOMContentLoaded', () => {
-  if (elements.travelForm) {
-    elements.travelForm.addEventListener('submit', handleFormSubmit);
-  }
-  if (elements.savedTrips) {
-    elements.savedTrips.addEventListener('click', handleRemoveTrip);
-  }
-  loadSavedTrips();
-});
 
 // Service Worker
 if ('serviceWorker' in navigator) {
@@ -182,3 +244,11 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+export {
+  calculateTripDetails,
+  saveTrip,
+  loadSavedTrips,
+  handleResponse,
+  initializeElements
+};

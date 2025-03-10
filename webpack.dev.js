@@ -1,13 +1,9 @@
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { fileURLToPath } from 'url';
-import sass from 'sass';
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const sass = require('sass');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default {
+module.exports = {
   entry: './src/client/js/app.js',
   mode: 'development',
   devtool: 'source-map',

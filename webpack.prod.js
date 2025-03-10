@@ -1,18 +1,15 @@
-import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import WorkboxPlugin from 'workbox-webpack-plugin';
-import { fileURLToPath } from 'url';
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default {
+module.exports = {
   entry: './src/client/js/app.js',
   mode: 'production',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
+    clean: true
   },
   module: {
     rules: [
@@ -35,7 +32,7 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/client/views/index.html',
-      favicon: './public/assets/favicon.ico' // Add if you have one
+      favicon: './public/assets/favicon.ico'
     }),
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
@@ -48,7 +45,7 @@ export default {
             cacheName: 'images',
             expiration: {
               maxEntries: 50,
-              maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+              maxAgeSeconds: 30 * 24 * 60 * 60,
             },
           },
         },
