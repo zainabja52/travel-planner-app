@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const sass = require('sass');
 
 module.exports = {
   entry: './src/client/js/app.js',
@@ -32,7 +31,7 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              implementation: sass,
+              implementation: require('sass'),
             },
           },
         ],
@@ -58,8 +57,9 @@ module.exports = {
       {
         context: ['/api'],
         target: 'http://localhost:3000',
-        changeOrigin: true,
         secure: false,
+        changeOrigin: true,
+        logLevel: 'debug', 
       },
     ],
     client: {

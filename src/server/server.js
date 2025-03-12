@@ -6,6 +6,7 @@ const path = require('path');
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../dist')));
@@ -86,9 +87,15 @@ app.post('/api/pixabay', async (req, res) => {
   }
 });
 
-if (process.env.NODE_ENV !== 'test') {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
+// Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 
 module.exports = { app };
+
