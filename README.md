@@ -5,6 +5,11 @@ A web app that helps users plan trips by integrating location data, weather fore
 
 ## 🎥 Demo
 
+
+https://github.com/user-attachments/assets/5d641932-8aeb-4288-9a7c-911d516cc2e9
+
+
+
 ## ✨ Features
 - **📅 Trip Planning**: Enter destination and date for weather forecasts
 - **📸 Image Integration**: Displays destination images from Pixabay
@@ -23,52 +28,47 @@ A web app that helps users plan trips by integrating location data, weather fore
 <img align="left" alt="Workbox" width="50px" src="https://avatars.githubusercontent.com/u/17530649?s=200&v=4" />
 <br><br>
 
+## Prerequisites
+- **Node.js**: Version 20.16.0.
+- **npm**: Version 9 or higher.
+
+To check your Node.js and npm versions, run:
+```bash
+node -v
+npm -v
+```
+
+If you need to install or update Node.js, download it from the [official website](https://nodejs.org/).
+
 ## 🚀 Installation
 ```bash
-git clone https://github.com/your-username/travel-planner.git
-cd travel-planner
+git clone https://github.com/zainabja52/travel-planner-app.git
+cd travel-planner-app
 npm install
 ```
 
 ## 💻 Usage
-1. **Development mode**:
+Two terminals are needed:
+- **Client-Side** (Webpack Dev Server):
+  ```bash
+  cd travel-planner-app\src\client
+  npm run build-dev
+  ```
+- **Server-Side** (Express Server):
+  ```bash
+  cd travel-planner-app
+  npm start
+  ```
+### **Testing Instructions**
+for running tests:
 ```bash
-npm run build-dev
-npm start
-```
-
-2. **Production build**:
-```bash
-npm run build-prod
-npm start
-```
-
-3. **Test suite**:
-```bash
+cd travel-planner-app
 npm test
-npm run test-coverage
-```
-
-## 🌐 API Integrations
-```javascript
-// Weatherbit API integration example
-app.post('/api/weatherbit', async (req, res) => {
-  try {
-    const { lat, lon, days } = req.body;
-    const endpoint = days <= 7 ? 'current' : 'forecast/daily';
-    const response = await fetch(
-      `https://api.weatherbit.io/v2.0/${endpoint}?lat=${lat}&lon=${lon}&key=${process.env.WEATHERBIT_KEY}&units=M`
-    );
-    // ...
-  } catch (error) {
-    // Error handling
-  }
-});
 ```
 
 ## 📂 Project Structure
 ```
-travel-planner/
+travel-planner-app/
 ├── src/
 │   ├── client/
 │   │   ├── js/          # React components and logic
@@ -77,7 +77,8 @@ travel-planner/
 │   ├── server/          # Express API endpoints
 │   └── __test__/        # Jest test suites
 ├── public/              # Static assets
-├── webpack/             # Build configurations
+├── webpack.dev.js
+├── webpack.prod.js
 └── dist/                # Production build output
 ```
 
@@ -108,5 +109,3 @@ handleFormSubmit = async (e) => {
   // ...
 };
 ```
-
-
