@@ -6,7 +6,7 @@ $accent-color: #FF6F61;           // A bold coral for energetic call-to-action h
 $background-gradient: linear-gradient(135deg, #74ebd5, #ACB6E5);  // A smooth gradient reminiscent of a serene horizon.
 $text-color: #2A3F54;
 $glass-effect: rgba(255, 255, 255, 0.25);
-
+@use "sass:color";
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -175,7 +175,7 @@ body {
     align-items: center;
     gap: 0.8rem;
     padding: 1.2rem 2.8rem;
-    background: linear-gradient(45deg, $secondary-color, darken($secondary-color, 10%));
+    background: linear-gradient(45deg, $secondary-color, color.adjust($secondary-color, $lightness: -10%)); //fix this line
     color: white;
     border: none;
     border-radius: 12px;
@@ -291,7 +291,7 @@ body {
     }
 
     .countdown {
-      background: linear-gradient(45deg, $secondary-color, darken($secondary-color, 10%));
+      background: linear-gradient(45deg, $secondary-color, color.adjust($secondary-color, $lightness: -10%));
       color: white;
       padding: 0.8rem 1.5rem;
       border-radius: 8px;
@@ -406,7 +406,7 @@ body {
     font-weight: 600;
 
     span {
-      color: lighten($primary-color, 30%);
+      color: color.adjust($primary-color, $lightness: 30%);
       font-size: 0.9rem;
       display: block;
       margin-top: 0.3rem;
@@ -466,8 +466,7 @@ body {
 .empty-state {
   text-align: center;
   padding: 2rem;
-  color: lighten($primary-color, 30%);
-  
+  color: color.adjust($primary-color, $lightness: 30%);  
   .icon {
     font-size: 3rem;
     margin-bottom: 1rem;
