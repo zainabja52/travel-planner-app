@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: './src/client/js/app.js',
@@ -32,9 +32,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/client/views/index.html',
-      favicon: './public/assets/favicon.ico'
     }),
-    new WorkboxPlugin.GenerateSW({
+    new GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
       runtimeCaching: [
@@ -58,7 +57,18 @@ module.exports = {
               statuses: [0, 200],
             },
           },
-        }
+        },
+        {
+          urlPattern: /\.(?:js|css|html)$/,
+          handler: 'CacheFirst', // Cache static assets
+          options: {
+            cacheName: 'static-resources',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60,
+            },
+          },
+        },
       ]
     })
   ],
