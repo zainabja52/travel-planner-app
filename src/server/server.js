@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../dist')));
 app.use('/assets', express.static(path.join(__dirname, '../../public/assets')));
+app.use('/service-worker.js', express.static(path.join(__dirname, '../../dist/service-worker.js')));
 
 // Geonames API
 app.post('/api/geonames', async (req, res) => {
