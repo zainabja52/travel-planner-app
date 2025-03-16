@@ -40,6 +40,7 @@ npm -v
 
 If you need to install or update Node.js, download it from the [official website](https://nodejs.org/).
 
+
 ## 🚀 Installation
 ```bash
 git clone https://github.com/zainabja52/travel-planner-app.git
@@ -48,18 +49,50 @@ npm install
 ```
 
 ## 💻 Usage
+ Create `.env` file:
+```env
+GEONAMES_USER=your_username
+WEATHERBIT_KEY=your_api_key
+PIXABAY_KEY=your_api_key
+```
+
+### Development Mode (Hot Reloading)
 Two terminals are needed:
-- **Client-Side** (Webpack Dev Server):
-  ```bash
-  cd travel-planner-app\src\client
-  npm run build-dev
-  ```
-- **Server-Side** (Express Server):
-  ```bash
-  cd travel-planner-app
-  npm start
-  ```
-### **Testing Instructions**
+1. **Terminal 1 - Client**:
+```bash
+cd src/client
+npm run build-dev  # Starts Webpack Dev Server on port 8081
+```
+
+2. **Terminal 2 - Server**:
+```bash
+npm start  # Starts Express server on port 3000
+```
+
+3. **Access the App**:
+- http://localhost:8081
+
+
+  
+### Production Mode
+1. **Build Production Files**:
+```bash
+npm run build-prod  # Creates optimized build in /dist
+```
+
+2. **Serve Production Build**:
+```bash
+npx serve -s dist -l 5000  # Serves frontend on port 5000
+```
+
+3. **Run Backend Server** (in separate terminal):
+```bash
+npm start  # Express server remains on port 3000
+```
+4. **Access the App**:
+- http://localhost:5000
+  
+### 🧪 **Testing Instructions**
 for running tests:
 ```bash
 cd travel-planner-app
