@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/client/js/app.js',
@@ -44,6 +45,10 @@ module.exports = {
       template: './src/client/views/index.html',
       filename: 'index.html',
     }),
+    new webpack.DefinePlugin({ // Add this plugin
+      'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
+
   ],
   devServer: {
     port: 8081,
