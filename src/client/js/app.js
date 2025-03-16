@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // API Utilities
 const api = {
   geonames: async (location) => {
-    const response = await fetch('/api/geonames', {
+    const response = await fetch('http://localhost:3000/api/geonames', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ location }),
@@ -42,7 +42,7 @@ const api = {
   },
 
   weatherbit: async (lat, lon, days) => {
-    const response = await fetch('/api/weatherbit', {
+    const response = await fetch('http://localhost:3000/api/weatherbit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ lat, lon, days }),
@@ -51,7 +51,7 @@ const api = {
   },
 
   pixabay: async (query) => {
-    const response = await fetch('/api/pixabay', {
+    const response = await fetch('http://localhost:3000/api/pixabay', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
